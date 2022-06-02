@@ -23,9 +23,6 @@ router.post("/",
     check("name", "Name is required").not().isEmpty(),
     check("surname", "Surname is required").not().isEmpty(),
     check("phone", "Phone is required").not().isEmpty(),
-    check("password", "The password must be at least 6 characters").isLength({
-      min: 6,
-    }),
   ],
   singUp
 );
@@ -35,9 +32,6 @@ router.post("/",
 router.post("/auth",
   [
     check("email", "Invalid format for email").isEmail(),
-    check("password", "The password must be at least 6 characters").isLength({
-      min: 6,
-    }),
   ],
   singIn
 );
@@ -61,9 +55,6 @@ router.delete("/",
   checkAuth,
   [
     check("email", "Invalid format for email").isEmail(),
-    check("password", "The password must be at least 6 characters").isLength({
-      min: 6,
-    }),
   ],
   deleteUser
 );

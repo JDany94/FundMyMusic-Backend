@@ -4,7 +4,7 @@ import { validationResult } from "express-validator";
 import UserModel from "../models/userModel.js";
 import generateIdToken from "../helpers/generateIdToken.js";
 import generateJWT from "../helpers/generateJWT.js";
-import { emailRegister } from "../helpers/email.js";
+import { emailRegister, emailForgotPass } from "../helpers/email.js";
 dotenv.config();
 
 const singUp = async (req, res) => {
@@ -63,20 +63,27 @@ const singIn = async (req, res) => {
   try {
     let user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(404).json({ msg: "User does not exist" });
+      const error = new Error("Este correo no ha sido registrado");
+      return res.status(404).json({ msg: error.message });
     }
 
     // Check confirmed
     if (!user.confirmed) {
-      return res
-        .status(403)
-        .json({ msg: "Your account has not been confirmed" });
+      const error = new Error("Tu cuenta aun no ha sido confirmada");
+      return res.status(404).json({ msg: error.message });
     }
 
     // Check password
     const correctPass = await bcryptjs.compare(password, user.password);
     if (!correctPass) {
-      return res.status(400).json({ msg: "Incorrect password" });
+      const error = new Error("Contraseña o Email Incorrecto");
+      return res.status(404).json({ msg: error.message });
+    }
+
+    // Check confirmed
+    if (!user.confirmed) {
+      const error = new Error("Tu cuenta aun no ha sido confirmada");
+      return res.status(404).json({ msg: error.message });
     } else {
       res.json({
         _id: user._id,
@@ -122,13 +129,20 @@ const resetPasswordResetToken = async (req, res) => {
   const { email } = req.body;
   let user = await UserModel.findOne({ email });
   if (!user) {
-    return res.status(404).json({ msg: "User does not exist" });
+    const error = new Error("Este correo no esta registrado");
+    return res.status(404).json({ msg: error.message });
   }
 
   try {
     user.token = generateIdToken();
     await user.save();
-    res.json({ msg: "We have sent an email with the instructions" });
+    //Email
+    emailForgotPass({
+      email: user.email,
+      name: user.name,
+      token: user.token,
+    });
+    res.json({ msg: "Hemos enviado un email con las instrucciones" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "ResetPass Error" });
@@ -141,7 +155,7 @@ const resetPasswordCheckToken = async (req, res) => {
   if (user) {
     res.json({ msg: "Valid Token" });
   } else {
-    return res.status(404).json({ msg: "Invalid Token" });
+    return res.status(404).json({ msg: "Link inválido" });
   }
 };
 
@@ -156,13 +170,13 @@ const resetPasswordNewPass = async (req, res) => {
       user.password = await bcryptjs.hash(password, salt);
       user.token = "Confirmed";
       await user.save();
-      res.json({ msg: "Updated password" });
+      res.json({ msg: "Contraseña actualizada" });
     } catch (error) {
       console.log(error);
       res.status(500).json({ msg: "ResetPassNew Error" });
     }
   } else {
-    return res.status(404).json({ msg: "Invalid Token" });
+    return res.status(404).json({ msg: "Token Inválido" });
   }
 };
 
