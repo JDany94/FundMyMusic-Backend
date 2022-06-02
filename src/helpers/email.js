@@ -4,17 +4,18 @@ export const emailRegister = async (data) => {
   const { email, name, token } = data;
 
   const transport = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
-      user: "aa0406f392607a",
-      pass: "e646df3ebcf361",
+      user: "fundmymusiic@gmail.com",
+      pass: "tdulnlycyygdgaqb",
     },
   });
 
   // Mail Info
   const info = await transport.sendMail({
-      from: '"FundMyMusic" <confirm@fundmymusic.com>',
+      from: '"FundMyMusic" <fundmymusiic@gmail.com>',
       to: email,
       subject: "FundMyMusic - Confirma tu cuenta",
       text: "Confirma tu cuenta de FundMyMusic",
