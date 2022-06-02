@@ -48,7 +48,8 @@ jobs:
           SITE_URL: ${{ steps.project.outputs.site-url }}
         run: |
           npm install
-          npm run start
+          npm run start &
+          ls
 
       - name: Deploy to IONOS
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
