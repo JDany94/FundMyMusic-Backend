@@ -47,7 +47,7 @@ jobs:
           SECURE_KEY: ${{ secrets.SECURE_KEY }}
           SITE_URL: ${{ steps.project.outputs.site-url }}
         run: |
-          npm run start          
+          npm install       
 
       - name: Deploy to IONOS
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
