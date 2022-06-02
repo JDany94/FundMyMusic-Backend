@@ -2,7 +2,7 @@
 
 FundMyMusic es un proyecto web y móvil para el crowdfunding de artistas musicales noveles.
 
-**Backend**
+ **Backend**
 
     - Node js 
     - Express
