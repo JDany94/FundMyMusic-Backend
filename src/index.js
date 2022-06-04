@@ -24,4 +24,25 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+const server = app.listen(PORT, () =>
+  console.log(`Server listening on port ${PORT}`)
+);
+
+// Socket.io
+
+import { Server } from "socket.io";
+
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.FRONTEND_URL,
+  },
+});
+
+io.on('connection', (socket) => {
+  
+  // Events
+  socket.on('updateSale', (concert) => {
+    console.log('emit pruebaa', concert)
+  })
+})

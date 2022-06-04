@@ -211,9 +211,9 @@ const deleteUser = async (req, res) => {
 };
 
 const profile = async (req, res) => {
-  const { id } = req.user;
-  let user = await UserModel.findOne({ id });
-  res.json({ msg: `Welcome ${user.name}` });
+  const user = req.user;
+  //let user = await UserModel.findOne({ id });
+  res.json( user);
 };
 
 export {

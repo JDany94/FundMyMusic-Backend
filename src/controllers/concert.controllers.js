@@ -22,7 +22,8 @@ const getConcert = async (req, res) => {
   }
 };
 
-const getUserSavedConcerts = async (req, res) => { //falta
+const getUserSavedConcerts = async (req, res) => {
+  //falta
   console.log("falta");
 };
 
@@ -54,6 +55,7 @@ const getArtistConcert = async (req, res) => {
 const createArtistConcert = async (req, res) => {
   const concert = new ConcertModel(req.body);
   concert.artist = req.user.id;
+  concert.available = concert.capacity;
   try {
     const concertSaved = await concert.save();
     res.json(concertSaved);
@@ -124,7 +126,7 @@ const deleteArtistConcert = async (req, res) => {
       return res.status(401).json({ msg: error.message });
     }
     await concert.deleteOne();
-    res.json({ msg: "Concert eliminated" });
+    res.json({ msg: "Concierto eliminado" });
   } catch (error) {
     return res.status(404).json({ msg: error.message });
   }

@@ -6,6 +6,6 @@ node_modules
 /dist
 
 # misc
-.env.local
+.env
 
 package-lock.json

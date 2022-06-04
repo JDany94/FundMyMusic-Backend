@@ -34,7 +34,6 @@ const concertSchema = mongoose.Schema(
     date: {
       type: Date,
       default: Date.now(),
-      required: true,
       trim: true,
     },
     description: {
@@ -54,18 +53,26 @@ const concertSchema = mongoose.Schema(
     },
     gift: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
     },
     available: {
       type: Number,
-      required: true,
       trim: true,
     },
     price: {
       type: Number,
       required: true,
       trim: true,
+    },
+    status: {
+      type: String,
+      default: "Open",
+      trim: true,
+    },
+    soldOut: {
+      type: Boolean,
+      default: false,
     },
   },
   {
