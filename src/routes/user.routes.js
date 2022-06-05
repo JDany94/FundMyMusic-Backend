@@ -11,13 +11,15 @@ import {
   resetPasswordNewPass,
   deleteUser,
   profile,
+  editProfile,
 } from "../controllers/user.controllers.js";
 
 const router = express.Router();
 
 // SingUp
 // api/user
-router.post("/",
+router.post(
+  "/",
   [
     check("email", "Invalid format for email").isEmail(),
     check("name", "Name is required").not().isEmpty(),
@@ -29,10 +31,9 @@ router.post("/",
 
 // SingIn
 // api/user/auth
-router.post("/auth",
-  [
-    check("email", "Invalid format for email").isEmail(),
-  ],
+router.post(
+  "/auth",
+  [check("email", "Invalid format for email").isEmail()],
   singIn
 );
 
@@ -51,15 +52,15 @@ router
 
 // Delete User
 // api/user
-router.delete("/",
+router.delete(
+  "/",
   checkAuth,
-  [
-    check("email", "Invalid format for email").isEmail(),
-  ],
+  [check("email", "Invalid format for email").isEmail()],
   deleteUser
 );
 
 // Profile
 router.get("/profile", checkAuth, profile);
+router.put("/profile", checkAuth, editProfile);
 
 export default router;

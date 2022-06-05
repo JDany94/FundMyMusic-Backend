@@ -213,7 +213,34 @@ const deleteUser = async (req, res) => {
 const profile = async (req, res) => {
   const user = req.user;
   //let user = await UserModel.findOne({ id });
-  res.json( user);
+  res.json(user);
+};
+
+const editProfile = async (req, res) => {
+  const user = req.body;
+  try {
+    const findUser = await UserModel.findById(user._id);
+    if (!findUser) {
+      const error = new Error("El usuario no existe");
+      return res.status(404).json({ msg: error.message });
+    }
+
+    const { _id, name, surname, phone } = req.body;
+
+    const update = {};
+    update.name = name;
+    update.surname = surname;
+    update.phone = phone;
+
+    const newUser = await UserModel.findByIdAndUpdate(
+      { _id: _id },
+      { $set: update },
+      { new: true }
+    ).select("-password -confirmed -token -createdAt -updatedAt -__v");
+    res.json(newUser);
+  } catch (error) {
+    return res.status(404).json({ msg: error.message });
+  }
 };
 
 export {
@@ -226,4 +253,5 @@ export {
   resetPasswordNewPass,
   deleteUser,
   profile,
+  editProfile,
 };
