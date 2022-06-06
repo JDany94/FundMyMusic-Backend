@@ -88,6 +88,7 @@ const editArtistConcert = async (req, res) => {
       gift,
       available,
       price,
+      date,
     } = req.body;
     const newConcert = {};
 
@@ -101,6 +102,7 @@ const editArtistConcert = async (req, res) => {
     newConcert.gift = gift;
     newConcert.available = available;
     newConcert.price = price;
+    newConcert.date = date;
 
     const concert = await ConcertModel.findByIdAndUpdate(
       { _id: req.params.id },
