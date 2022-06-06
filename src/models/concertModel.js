@@ -67,7 +67,7 @@ const concertSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      default: "Fecha Abierta",
+      default: "Open",
       trim: true,
     },
     soldOut: {

@@ -58,12 +58,17 @@ const singIn = async (req, res) => {
     return res.status(400).json({ errores: errores.array() });
   }
 
-  const { email, password } = req.body;
+  const { email, password, from } = req.body;
 
   try {
     let user = await UserModel.findOne({ email });
     if (!user) {
       const error = new Error("Este correo no ha sido registrado");
+      return res.status(404).json({ msg: error.message });
+    }
+
+    if (user.role !== from) {
+      const error = new Error("No tienes permisos para iniciar sesión aquí");
       return res.status(404).json({ msg: error.message });
     }
 
@@ -225,9 +230,10 @@ const editProfile = async (req, res) => {
       return res.status(404).json({ msg: error.message });
     }
 
-    const { _id, name, surname, phone } = req.body;
+    const { _id, stageName, name, surname, phone } = req.body;
 
     const update = {};
+    update.stageName = stageName;
     update.name = name;
     update.surname = surname;
     update.phone = phone;

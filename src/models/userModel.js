@@ -8,6 +8,11 @@ const userSchema = mongoose.Schema(
       trim: true,
       unique: true,
     },
+    stageName: {
+      type: String,
+      default: '',
+      trim: true,
+    },
     name: {
       type: String,
       required: true,
