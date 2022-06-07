@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
-import UserModel from "../models/userModel.js";
+import cloudinary from "cloudinary";
 import ConcertModel from "../models/concertModel.js";
 dotenv.config();
+
+
 
 const getConcerts = async (req, res) => {
   const concerts = await ConcertModel.find();
@@ -127,6 +129,12 @@ const deleteArtistConcert = async (req, res) => {
       const error = new Error("Permission denied");
       return res.status(401).json({ msg: error.message });
     }
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+    await cloudinary.v2.uploader.destroy(concert.FlyerPublicId);
     await concert.deleteOne();
     res.json({ msg: "Concierto eliminado" });
   } catch (error) {

@@ -17,9 +17,14 @@ const concertSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    concertFlyer: {
+    FlyerURL: {
       type: String,
-      trim: true,
+    },
+    FlyerPublicId: {
+      type: String,
+    },
+    FlyerSize: {
+      type: Number,
     },
     genre: {
       type: String,
