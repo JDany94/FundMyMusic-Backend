@@ -57,7 +57,6 @@ const getArtistConcert = async (req, res) => {
 const createArtistConcert = async (req, res) => {
   const concert = new ConcertModel(req.body);
   concert.artist = req.user.id;
-  concert.available = concert.capacity;
   try {
     const concertSaved = await concert.save();
     res.json(concertSaved);
@@ -88,7 +87,6 @@ const editArtistConcert = async (req, res) => {
       capacity,
       minimumSales,
       gift,
-      available,
       price,
       date,
     } = req.body;
@@ -102,7 +100,6 @@ const editArtistConcert = async (req, res) => {
     newConcert.capacity = capacity;
     newConcert.minimumSales = minimumSales;
     newConcert.gift = gift;
-    newConcert.available = available;
     newConcert.price = price;
     newConcert.date = date;
 

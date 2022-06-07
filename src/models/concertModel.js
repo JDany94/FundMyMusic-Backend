@@ -61,8 +61,9 @@ const concertSchema = mongoose.Schema(
       default: "",
       trim: true,
     },
-    available: {
+    sold: {
       type: Number,
+      default: 0,
       trim: true,
     },
     price: {
