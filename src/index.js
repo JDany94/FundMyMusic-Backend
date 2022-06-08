@@ -58,6 +58,17 @@ app.post("/api/files", upload.single("file"), async (req, res) => {
   });
 });
 
+app.put("/api/files", upload.single("file"), async (req, res) => {
+  await cloudinary.v2.uploader.destroy(req.body.FlyerPublicId);
+  const result = await cloudinary.v2.uploader.upload(req.file.path);
+  await fs.unlink(req.file.path);
+  res.send({
+    url: result.url,
+    publicId: result.public_id,
+    size: result.bytes / 1000000,
+  });
+});
+
 const PORT = process.env.PORT || 4000;
 const server = app.listen(PORT, () =>
   console.log(`Server listening on port ${PORT}`)

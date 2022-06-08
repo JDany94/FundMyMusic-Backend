@@ -3,8 +3,6 @@ import cloudinary from "cloudinary";
 import ConcertModel from "../models/concertModel.js";
 dotenv.config();
 
-
-
 const getConcerts = async (req, res) => {
   const concerts = await ConcertModel.find();
   res.json(concerts);
@@ -89,6 +87,9 @@ const editArtistConcert = async (req, res) => {
       gift,
       price,
       date,
+      FlyerURL,
+      FlyerPublicId,
+      FlyerSize,
     } = req.body;
     const newConcert = {};
 
@@ -102,6 +103,9 @@ const editArtistConcert = async (req, res) => {
     newConcert.gift = gift;
     newConcert.price = price;
     newConcert.date = date;
+    newConcert.FlyerURL = FlyerURL;
+    newConcert.FlyerPublicId = FlyerPublicId;
+    newConcert.FlyerSize = FlyerSize;
 
     const concert = await ConcertModel.findByIdAndUpdate(
       { _id: req.params.id },
