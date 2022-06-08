@@ -1,6 +1,9 @@
-import dotenv from "dotenv";
 import cloudinary from "cloudinary";
+import fs from "fs-extra";
+
 import ConcertModel from "../models/concertModel.js";
+
+import dotenv from "dotenv";
 dotenv.config();
 
 const getConcerts = async (req, res) => {
@@ -130,17 +133,33 @@ const deleteArtistConcert = async (req, res) => {
       const error = new Error("Permission denied");
       return res.status(401).json({ msg: error.message });
     }
-    cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET,
-    });
     await cloudinary.v2.uploader.destroy(concert.FlyerPublicId);
     await concert.deleteOne();
     res.json({ msg: "Concierto eliminado" });
   } catch (error) {
     return res.status(404).json({ msg: error.message });
   }
+};
+
+const uploadImage = async (req, res) => {
+  const result = await cloudinary.v2.uploader.upload(req.file.path);
+  await fs.unlink(req.file.path);
+  res.send({
+    url: result.url,
+    publicId: result.public_id,
+    size: result.bytes / 1000000,
+  });
+};
+
+const editImage = async (req, res) => {
+  await cloudinary.v2.uploader.destroy(req.body.FlyerPublicId);
+  const result = await cloudinary.v2.uploader.upload(req.file.path);
+  await fs.unlink(req.file.path);
+  res.send({
+    url: result.url,
+    publicId: result.public_id,
+    size: result.bytes / 1000000,
+  });
 };
 
 export {
@@ -152,4 +171,6 @@ export {
   createArtistConcert,
   editArtistConcert,
   deleteArtistConcert,
+  uploadImage,
+  editImage,
 };

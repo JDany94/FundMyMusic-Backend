@@ -1,10 +1,12 @@
-import dotenv from "dotenv";
 import bcryptjs from "bcryptjs";
 import { validationResult } from "express-validator";
+
 import UserModel from "../models/userModel.js";
 import generateIdToken from "../helpers/generateIdToken.js";
 import generateJWT from "../helpers/generateJWT.js";
 import { emailRegister, emailForgotPass } from "../helpers/email.js";
+
+import dotenv from "dotenv";
 dotenv.config();
 
 const singUp = async (req, res) => {

@@ -1,5 +1,4 @@
 import express from "express";
-import { check } from "express-validator";
 import checkAuth from "../middleware/checkAuth.js";
 import {
   singUp,
@@ -18,24 +17,11 @@ const router = express.Router();
 
 // SingUp
 // api/user
-router.post(
-  "/",
-  [
-    check("email", "Invalid format for email").isEmail(),
-    check("name", "Name is required").not().isEmpty(),
-    check("surname", "Surname is required").not().isEmpty(),
-    check("phone", "Phone is required").not().isEmpty(),
-  ],
-  singUp
-);
+router.post("/", singUp);
 
 // SingIn
 // api/user/auth
-router.post(
-  "/auth",
-  [check("email", "Invalid format for email").isEmail()],
-  singIn
-);
+router.post("/auth", singIn);
 
 // Get the authenticated user
 router.get("/auth", checkAuth, authenticatedUser);
@@ -52,12 +38,7 @@ router
 
 // Delete User
 // api/user
-router.delete(
-  "/",
-  checkAuth,
-  [check("email", "Invalid format for email").isEmail()],
-  deleteUser
-);
+router.delete("/", checkAuth, deleteUser);
 
 // Profile
 router.get("/profile", checkAuth, profile);
