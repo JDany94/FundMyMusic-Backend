@@ -28,8 +28,9 @@ const singUp = async (req, res) => {
 
     // Create user
     user = new UserModel(req.body);
-    user.token = generateIdToken();
+    //user.token = generateIdToken();
 
+    // TODO:Poner de nuevo validar correo
     // Hashear password
     const salt = await bcryptjs.genSalt(10);
     user.password = await bcryptjs.hash(password, salt);
@@ -38,14 +39,21 @@ const singUp = async (req, res) => {
     await user.save();
 
     // Email
-    emailRegister({
-      email: user.email,
-      name: user.name,
-      token: user.token,
-    });
+    //emailRegister({
+    //  email: user.email,
+    //  name: user.name,
+    //  token: user.token,
+    //});
+
+    //res.json({
+    //  msg: "Usuario creado correctamente, revisa tu email para confirmar la cuenta",
+    //});
 
     res.json({
-      msg: "Usuario creado correctamente, revisa tu email para confirmar la cuenta",
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: generateJWT(user),
     });
   } catch (error) {
     console.log(error);
