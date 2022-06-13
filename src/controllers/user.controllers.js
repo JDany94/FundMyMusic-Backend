@@ -254,13 +254,14 @@ const editProfile = async (req, res) => {
       return res.status(404).json({ msg: error.message });
     }
 
-    const { _id, stageName, name, surname, phone } = req.body;
+    const { _id, stageName, name, surname, phone, balance } = req.body;
 
     const update = {};
     update.stageName = stageName;
     update.name = name;
     update.surname = surname;
     update.phone = phone;
+    update.balance = balance;
 
     const newUser = await UserModel.findByIdAndUpdate(
       { _id: _id },
