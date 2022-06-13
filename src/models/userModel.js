@@ -43,7 +43,17 @@ const userSchema = mongoose.Schema(
       default: "User",
       trim: true,
     },
+    balance: {
+      type: Number,
+      default: 0,
+    },
     savedConcerts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Concerts",
+      },
+    ],
+    purchasedTickets: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Concerts",

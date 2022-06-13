@@ -57,7 +57,9 @@ const singUp = async (req, res) => {
       surname: user.surname,
       phone: user.phone,
       role: user.role,
+      balance: user.balance,
       savedConcerts: user.savedConcerts,
+      purchasedTickets: user.purchasedTickets,
       token: generateJWT(user),
     });
   } catch (error) {
@@ -113,7 +115,9 @@ const singIn = async (req, res) => {
         surname: user.surname,
         phone: user.phone,
         role: user.role,
+        balance: user.balance,
         savedConcerts: user.savedConcerts,
+        purchasedTickets: user.purchasedTickets,
         token: generateJWT(user),
       });
     }
