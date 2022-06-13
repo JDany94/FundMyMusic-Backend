@@ -145,7 +145,7 @@ const uploadImage = async (req, res) => {
   const result = await cloudinary.v2.uploader.upload(req.file.path);
   await fs.unlink(req.file.path);
   res.send({
-    url: result.url,
+    url: result.url.replace(/http/g, 'https'),
     publicId: result.public_id,
     size: result.bytes / 1000000,
   });
@@ -156,7 +156,7 @@ const editImage = async (req, res) => {
   const result = await cloudinary.v2.uploader.upload(req.file.path);
   await fs.unlink(req.file.path);
   res.send({
-    url: result.url,
+    url: result.url.replace(/http/g, 'https'),
     publicId: result.public_id,
     size: result.bytes / 1000000,
   });
