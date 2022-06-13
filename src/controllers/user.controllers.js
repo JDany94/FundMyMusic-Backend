@@ -51,8 +51,13 @@ const singUp = async (req, res) => {
 
     res.json({
       _id: user._id,
-      name: user.name,
       email: user.email,
+      stageName: user.stageName,
+      name: user.name,
+      surname: user.surname,
+      phone: user.phone,
+      role: user.role,
+      savedConcerts: user.savedConcerts,
       token: generateJWT(user),
     });
   } catch (error) {
@@ -102,8 +107,13 @@ const singIn = async (req, res) => {
     } else {
       res.json({
         _id: user._id,
-        name: user.name,
         email: user.email,
+        stageName: user.stageName,
+        name: user.name,
+        surname: user.surname,
+        phone: user.phone,
+        role: user.role,
+        savedConcerts: user.savedConcerts,
         token: generateJWT(user),
       });
     }
