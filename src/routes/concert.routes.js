@@ -4,7 +4,7 @@ import multerUpload from "../config/multer.js";
 import {
   getConcerts,
   getConcert,
-  getUserSavedConcerts,
+  setUserSavedConcerts,
   getArtistConcerts,
   getArtistConcert,
   createArtistConcert,
@@ -28,7 +28,7 @@ router.post("/", checkAuth, multerUpload.single("file"), uploadImage);
 router.put("/", checkAuth, multerUpload.single("file"), editImage);
 
 // User
-router.get("/userSaved", checkAuth, getUserSavedConcerts); //falta
+router.post("/user-saved-concerts", checkAuth, setUserSavedConcerts);
 
 // All
 router.get("/", checkAuth, getConcerts);

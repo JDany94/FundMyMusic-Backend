@@ -2,6 +2,7 @@ import cloudinary from "cloudinary";
 import fs from "fs-extra";
 
 import ConcertModel from "../models/concertModel.js";
+import UserModel from "../models/userModel.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -25,9 +26,29 @@ const getConcert = async (req, res) => {
   }
 };
 
-const getUserSavedConcerts = async (req, res) => {
-  //falta
-  console.log("falta");
+const setUserSavedConcerts = async (req, res) => {
+  const user = req.user;
+  try {
+    const findUser = await UserModel.findById(user._id);
+    if (!findUser) {
+      const error = new Error("El usuario no existe");
+      return res.status(404).json({ msg: error.message });
+    }
+
+    const { savedConcerts } = req.body;
+
+    const update = {};
+    update.savedConcerts = savedConcerts;
+
+    const newUser = await UserModel.findByIdAndUpdate(
+      { _id: user._id },
+      { $set: update },
+      { new: true }
+    ).select("-password -confirmed -token -createdAt -updatedAt -__v");
+    res.json(newUser);
+  } catch (error) {
+    return res.status(404).json({ msg: error.message });
+  }
 };
 
 const getArtistConcerts = async (req, res) => {
@@ -165,7 +186,7 @@ const editImage = async (req, res) => {
 export {
   getConcerts,
   getConcert,
-  getUserSavedConcerts,
+  setUserSavedConcerts,
   getArtistConcerts,
   getArtistConcert,
   createArtistConcert,
