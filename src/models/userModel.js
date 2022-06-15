@@ -55,8 +55,13 @@ const userSchema = mongoose.Schema(
     ],
     purchasedTickets: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Concerts",
+        concert: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Concerts",
+        },
+        quantity: {
+          type: Number,
+        },
       },
     ],
   },

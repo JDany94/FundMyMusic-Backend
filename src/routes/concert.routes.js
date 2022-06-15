@@ -5,6 +5,7 @@ import {
   getConcerts,
   getConcert,
   setUserSavedConcerts,
+  setpurchasedTickets,
   getArtistConcerts,
   getArtistConcert,
   createArtistConcert,
@@ -29,6 +30,7 @@ router.put("/", checkAuth, multerUpload.single("file"), editImage);
 
 // User
 router.post("/user-saved-concerts", checkAuth, setUserSavedConcerts);
+router.post("/purchased-tickets", checkAuth, setpurchasedTickets);
 
 // All
 router.get("/", checkAuth, getConcerts);

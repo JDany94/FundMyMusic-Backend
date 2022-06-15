@@ -51,6 +51,31 @@ const setUserSavedConcerts = async (req, res) => {
   }
 };
 
+const setpurchasedTickets = async (req, res) => {
+  const user = req.user;
+  try {
+    const findUser = await UserModel.findById(user._id);
+    if (!findUser) {
+      const error = new Error("El usuario no existe");
+      return res.status(404).json({ msg: error.message });
+    }
+
+    const { purchasedTickets } = req.body;
+
+    const update = {};
+    update.purchasedTickets = purchasedTickets;
+
+    const newUser = await UserModel.findByIdAndUpdate(
+      { _id: user._id },
+      { $set: update },
+      { new: true }
+    ).select("-password -confirmed -token -createdAt -updatedAt -__v");
+    res.json(newUser);
+  } catch (error) {
+    return res.status(404).json({ msg: error.message });
+  }
+};
+
 const getArtistConcerts = async (req, res) => {
   const concerts = await ConcertModel.find()
     .where("artist")
@@ -166,7 +191,7 @@ const uploadImage = async (req, res) => {
   const result = await cloudinary.v2.uploader.upload(req.file.path);
   await fs.unlink(req.file.path);
   res.send({
-    url: result.url.replace(/http/g, 'https'),
+    url: result.url.replace(/http/g, "https"),
     publicId: result.public_id,
     size: result.bytes / 1000000,
   });
@@ -177,7 +202,7 @@ const editImage = async (req, res) => {
   const result = await cloudinary.v2.uploader.upload(req.file.path);
   await fs.unlink(req.file.path);
   res.send({
-    url: result.url.replace(/http/g, 'https'),
+    url: result.url.replace(/http/g, "https"),
     publicId: result.public_id,
     size: result.bytes / 1000000,
   });
@@ -187,6 +212,7 @@ export {
   getConcerts,
   getConcert,
   setUserSavedConcerts,
+  setpurchasedTickets,
   getArtistConcerts,
   getArtistConcert,
   createArtistConcert,
