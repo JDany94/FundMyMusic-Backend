@@ -73,7 +73,7 @@ const setpurchasedTickets = async (req, res) => {
       // Si hay suficiente saldo se busca el concierto y se actualiza las ventas
       let concertDB = await ConcertModel.findById(concert._id);
 
-      if (concertDB.capacity - concertDB.sold > quantity) {
+      if (concertDB.capacity - concertDB.sold >= quantity) {
         // Si hay tickets suficientes
         concertDB.sold += quantity;
 
