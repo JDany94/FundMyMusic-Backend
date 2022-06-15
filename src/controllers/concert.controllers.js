@@ -66,34 +66,60 @@ const setpurchasedTickets = async (req, res) => {
       concert,
       quantity,
     };
+
     const price = quantity * concert.price;
 
     if (user.balance > price) {
-      user.balance -= price;
-      let findConcert = false;
-      for (let i = 0; i < user.purchasedTickets.length; i++) {
-        if (
-          JSON.stringify(user.purchasedTickets[i].concert) ===
-          JSON.stringify(concert._id)
-        ) {
-          user.purchasedTickets[i].quantity += quantity;
-          findConcert = true;
+      // Si hay suficiente saldo se busca el concierto y se actualiza las ventas
+      let concertDB = await ConcertModel.findById(concert._id);
+
+      if (concertDB.capacity - concertDB.sold > quantity) {
+        // Si hay tickets suficientes
+        concertDB.sold += quantity;
+
+        if (concertDB.sold >= concertDB.minimumSales) {
+          concertDB.status = "Closed";
         }
-      }
-      if (!findConcert) {
-        user.purchasedTickets.push(newConcert);
-      }
 
-      const update = {};
-      update.balance = user.balance;
-      update.purchasedTickets = user.purchasedTickets;
+        if (concertDB.sold === concertDB.capacity) {
+          concertDB.soldOut = true;
+        }
+        // Se actualiza el concierto
+        await ConcertModel.findByIdAndUpdate(
+          { _id: concertDB._id },
+          { $set: concertDB },
+          { new: true }
+        );
 
-      const newUser = await UserModel.findByIdAndUpdate(
-        { _id: user._id },
-        { $set: update },
-        { new: true }
-      ).select("-password -confirmed -token -createdAt -updatedAt -__v");
-      res.json(newUser);
+        user.balance -= price;
+        let findConcert = false;
+        for (let i = 0; i < user.purchasedTickets.length; i++) {
+          if (
+            JSON.stringify(user.purchasedTickets[i].concert) ===
+            JSON.stringify(concert._id)
+          ) {
+            user.purchasedTickets[i].quantity += quantity;
+            findConcert = true;
+          }
+        }
+        if (!findConcert) {
+          user.purchasedTickets.push(newConcert);
+        }
+
+        const update = {};
+        update.balance = user.balance;
+        update.purchasedTickets = user.purchasedTickets;
+
+        // Se agregan las entradas y resta el saldo al usuario
+        const newUser = await UserModel.findByIdAndUpdate(
+          { _id: user._id },
+          { $set: update },
+          { new: true }
+        ).select("-password -confirmed -token -createdAt -updatedAt -__v");
+        res.json(newUser);
+      } else {
+        res.status(404).json({ msg: "Entradas agotadas" });
+      }
     } else {
       res.status(404).json({ msg: "Saldo Insuficiente" });
     }
