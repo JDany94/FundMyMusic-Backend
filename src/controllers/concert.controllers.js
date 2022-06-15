@@ -52,7 +52,7 @@ const setUserSavedConcerts = async (req, res) => {
 };
 
 const setpurchasedTickets = async (req, res) => {
-  const user = req.user;
+  let user = req.user;
   try {
     const findUser = await UserModel.findById(user._id);
     if (!findUser) {
@@ -60,17 +60,43 @@ const setpurchasedTickets = async (req, res) => {
       return res.status(404).json({ msg: error.message });
     }
 
-    const { purchasedTickets } = req.body;
+    const { concert, quantity } = req.body;
 
-    const update = {};
-    update.purchasedTickets = purchasedTickets;
+    const newConcert = {
+      concert,
+      quantity,
+    };
+    const price = quantity * concert.price;
 
-    const newUser = await UserModel.findByIdAndUpdate(
-      { _id: user._id },
-      { $set: update },
-      { new: true }
-    ).select("-password -confirmed -token -createdAt -updatedAt -__v");
-    res.json(newUser);
+    if (user.balance > price) {
+      user.balance -= price;
+      let findConcert = false;
+      for (let i = 0; i < user.purchasedTickets.length; i++) {
+        if (
+          JSON.stringify(user.purchasedTickets[i].concert) ===
+          JSON.stringify(concert._id)
+        ) {
+          user.purchasedTickets[i].quantity += quantity;
+          findConcert = true;
+        }
+      }
+      if (!findConcert) {
+        user.purchasedTickets.push(newConcert);
+      }
+
+      const update = {};
+      update.balance = user.balance;
+      update.purchasedTickets = user.purchasedTickets;
+
+      const newUser = await UserModel.findByIdAndUpdate(
+        { _id: user._id },
+        { $set: update },
+        { new: true }
+      ).select("-password -confirmed -token -createdAt -updatedAt -__v");
+      res.json(newUser);
+    } else {
+      res.status(404).json({ msg: "Saldo Insuficiente" });
+    }
   } catch (error) {
     return res.status(404).json({ msg: error.message });
   }
