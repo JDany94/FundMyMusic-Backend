@@ -6,12 +6,6 @@ const concertSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
     },
-    audience: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Users",
-      },
-    ],
     title: {
       type: String,
       required: true,
