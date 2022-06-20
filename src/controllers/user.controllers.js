@@ -161,7 +161,7 @@ const resetPasswordResetToken = async (req, res) => {
     const error = new Error("Este correo no esta registrado");
     return res.status(404).json({ msg: error.message });
   }
-
+ 
   try {
     user.token = generateIdToken();
     await user.save();
