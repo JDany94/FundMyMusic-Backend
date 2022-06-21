@@ -34,12 +34,9 @@ const setUserSavedConcerts = async (req, res) => {
       const error = new Error("El usuario no existe");
       return res.status(404).json({ msg: error.message });
     }
-
     const { savedConcerts } = req.body;
-
     const update = {};
     update.savedConcerts = savedConcerts;
-
     const newUser = await UserModel.findByIdAndUpdate(
       { _id: user._id },
       { $set: update },
@@ -59,28 +56,21 @@ const setpurchasedTickets = async (req, res) => {
       const error = new Error("El usuario no existe");
       return res.status(404).json({ msg: error.message });
     }
-
     const { concert, quantity } = req.body;
-
     const newConcert = {
       concert,
       quantity,
     };
-
     const price = quantity * concert.price;
-
     if (user.balance >= price) {
       // Si hay suficiente saldo se busca el concierto y se actualiza las ventas
       let concertDB = await ConcertModel.findById(concert._id);
-
       if (concertDB.capacity - concertDB.sold >= quantity) {
         // Si hay tickets suficientes
         concertDB.sold += quantity;
-
         if (concertDB.sold >= concertDB.minimumSales) {
           concertDB.status = "Closed";
         }
-
         if (concertDB.sold === concertDB.capacity) {
           concertDB.soldOut = true;
         }
@@ -90,7 +80,6 @@ const setpurchasedTickets = async (req, res) => {
           { $set: concertDB },
           { new: true }
         );
-
         user.balance -= price;
         let findConcert = false;
         for (let i = 0; i < user.purchasedTickets.length; i++) {
@@ -105,11 +94,9 @@ const setpurchasedTickets = async (req, res) => {
         if (!findConcert) {
           user.purchasedTickets.push(newConcert);
         }
-
         const update = {};
         update.balance = user.balance;
         update.purchasedTickets = user.purchasedTickets;
-
         // Se agregan las entradas y resta el saldo al usuario
         const newUser = await UserModel.findByIdAndUpdate(
           { _id: user._id },

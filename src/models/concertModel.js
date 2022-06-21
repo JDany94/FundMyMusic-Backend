@@ -5,6 +5,7 @@ const concertSchema = mongoose.Schema(
     artist: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
+      required: true,
     },
     title: {
       type: String,
@@ -13,12 +14,15 @@ const concertSchema = mongoose.Schema(
     },
     FlyerURL: {
       type: String,
+      required: true,
     },
     FlyerPublicId: {
       type: String,
+      required: true,
     },
     FlyerSize: {
       type: Number,
+      required: true,
     },
     genre: {
       type: String,
@@ -32,7 +36,7 @@ const concertSchema = mongoose.Schema(
     },
     date: {
       type: Date,
-      default: Date.now(),
+      required: true,
       trim: true,
     },
     description: {

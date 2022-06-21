@@ -7,7 +7,7 @@ const generateJWT = (user) => {
     },
   };
   return jwt.sign(payload, process.env.SECURE_KEY, {
-    expiresIn: "30d", // TODO: Poner en 7 dias
+    expiresIn: "15d",
   });
 };
 

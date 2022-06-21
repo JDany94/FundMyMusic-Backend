@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema(
     },
     stageName: {
       type: String,
-      default: '',
+      default: "",
       trim: true,
     },
     name: {
@@ -33,10 +33,11 @@ const userSchema = mongoose.Schema(
     },
     token: {
       type: String,
+      default: "Confirmed",
     },
     confirmed: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     role: {
       type: String,

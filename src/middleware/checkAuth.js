@@ -15,11 +15,11 @@ const auth = async (req, res, next) => {
       );
       return next();
     } catch (error) {
-      res.status(404).json({ msg: "Token inválido" });
+      res.status(404).json({ msg: "Token no válido" });
     }
   }
   if (!token) {
-    const error = new Error("Token inválido");
+    const error = new Error("Token no válido");
     return res.status(401).json({ msg: error.message });
   }
   next();

@@ -15,40 +15,20 @@ const singUp = async (req, res) => {
   if (!errores.isEmpty()) {
     return res.status(400).json({ errores: errores.array() });
   }
-
   const { email, password } = req.body;
-
   try {
     let user = await UserModel.findOne({ email });
-
     if (user) {
       const error = new Error("Este correo ya esta registrado");
       return res.status(400).json({ msg: error.message });
     }
-
     // Create user
     user = new UserModel(req.body);
-    //user.token = generateIdToken();
-
-    // TODO:Poner de nuevo validar correo
     // Hashear password
     const salt = await bcryptjs.genSalt(10);
     user.password = await bcryptjs.hash(password, salt);
-
     // Save user
     await user.save();
-
-    // Email
-    //emailRegister({
-    //  email: user.email,
-    //  name: user.name,
-    //  token: user.token,
-    //});
-
-    //res.json({
-    //  msg: "Usuario creado correctamente, revisa tu email para confirmar la cuenta",
-    //});
-
     res.json({
       _id: user._id,
       email: user.email,
@@ -74,37 +54,26 @@ const singIn = async (req, res) => {
   if (!errores.isEmpty()) {
     return res.status(400).json({ errores: errores.array() });
   }
-
   const { email, password, from } = req.body;
-
   try {
     let user = await UserModel.findOne({ email });
     if (!user) {
       const error = new Error("Este correo no ha sido registrado");
       return res.status(404).json({ msg: error.message });
     }
-
     if (user.role !== from) {
       const error = new Error("No tienes permisos para iniciar sesión aquí");
       return res.status(404).json({ msg: error.message });
     }
-
     // Check confirmed
     if (!user.confirmed) {
       const error = new Error("Tu cuenta aun no ha sido confirmada");
       return res.status(404).json({ msg: error.message });
     }
-
     // Check password
     const correctPass = await bcryptjs.compare(password, user.password);
     if (!correctPass) {
       const error = new Error("Contraseña o Email Incorrecto");
-      return res.status(404).json({ msg: error.message });
-    }
-
-    // Check confirmed
-    if (!user.confirmed) {
-      const error = new Error("Tu cuenta aun no ha sido confirmada");
       return res.status(404).json({ msg: error.message });
     } else {
       res.json({
@@ -141,7 +110,7 @@ const confirmIdToken = async (req, res) => {
   const { token } = req.params;
   const user = await UserModel.findOne({ token });
   if (!user) {
-    return res.status(403).json({ msg: "Link inválido" });
+    return res.status(403).json({ msg: "Link no válido" });
   }
   try {
     user.confirmed = true;
@@ -161,7 +130,6 @@ const resetPasswordResetToken = async (req, res) => {
     const error = new Error("Este correo no esta registrado");
     return res.status(404).json({ msg: error.message });
   }
- 
   try {
     user.token = generateIdToken();
     await user.save();
@@ -184,14 +152,13 @@ const resetPasswordCheckToken = async (req, res) => {
   if (user) {
     res.json({ msg: "Valid Token" });
   } else {
-    return res.status(404).json({ msg: "Link inválido" });
+    return res.status(404).json({ msg: "Link no válido" });
   }
 };
 
 const resetPasswordNewPass = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
-
   const user = await UserModel.findOne({ token });
   if (user) {
     try {
@@ -215,21 +182,17 @@ const deleteUser = async (req, res) => {
   if (!errores.isEmpty()) {
     return res.status(400).json({ errores: errores.array() });
   }
-
   const { email, password } = req.body;
-
   try {
     let user = await UserModel.findOne({ email });
     if (!user) {
       return res.status(404).json({ msg: "User does not exist" });
     }
-
     // Check password
     const correctPass = await bcryptjs.compare(password, user.password);
     if (!correctPass) {
       return res.status(400).json({ msg: "Incorrect password" });
     }
-
     // Delete user
     await user.delete();
     return res.json({ msg: "User has been deleted" });
@@ -240,8 +203,7 @@ const deleteUser = async (req, res) => {
 };
 
 const profile = async (req, res) => {
-  const user = req.user;
-  //let user = await UserModel.findOne({ id });
+  const user = req.user; //Lo consulta en el middleware
   res.json(user);
 };
 
@@ -253,16 +215,13 @@ const editProfile = async (req, res) => {
       const error = new Error("El usuario no existe");
       return res.status(404).json({ msg: error.message });
     }
-
     const { _id, stageName, name, surname, phone, balance } = req.body;
-
     const update = {};
     update.stageName = stageName;
     update.name = name;
     update.surname = surname;
     update.phone = phone;
     update.balance = balance;
-
     const newUser = await UserModel.findByIdAndUpdate(
       { _id: _id },
       { $set: update },
