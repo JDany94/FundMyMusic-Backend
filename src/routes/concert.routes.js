@@ -33,7 +33,7 @@ router.post("/user-saved-concerts", checkAuth, setUserSavedConcerts);
 router.post("/purchased-tickets", checkAuth, setpurchasedTickets);
 
 // All
-router.get("/", checkAuth, getConcerts);
-router.get("/:id", checkAuth, getConcert);
+router.get("/", getConcerts);
+router.get("/:id", getConcert);
 
 export default router;
