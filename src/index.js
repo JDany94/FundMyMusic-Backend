@@ -30,12 +30,22 @@ app.use("/api/user", userRoutes);
 app.use("/api/concerts", concertRoutes);
 app.use("/api/files", concertRoutes);
 
-// Home
+// Landing Page
 app.get("/", (req, res) => {
   res.sendFile(
     path.join(
       path.dirname(fileURLToPath(import.meta.url)),
       "../public/index.html"
+    )
+  );
+});
+
+// Download APK
+app.get("/api/fundmymusic", (req, res) => {
+  res.sendFile(
+    path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../public/app-release.apk"
     )
   );
 });

@@ -13,4 +13,16 @@ const multerUpload = multer({
   },
 });
 
-export default multerUpload;
+const storage = multer.diskStorage({
+  destination: path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../../public"
+  ),
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const multerUploadAPK = multer({ storage: storage });
+
+export { multerUpload, multerUploadAPK };

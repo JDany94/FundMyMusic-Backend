@@ -247,6 +247,10 @@ const editImage = async (req, res) => {
   });
 };
 
+const uploadAPK = async (req, res) => {
+  res.send(req.file.filename);
+};
+
 export {
   getConcerts,
   getConcert,
@@ -259,4 +263,5 @@ export {
   deleteArtistConcert,
   uploadImage,
   editImage,
+  uploadAPK,
 };

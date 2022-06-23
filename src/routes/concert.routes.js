@@ -1,6 +1,6 @@
 import express from "express";
 import checkAuth from "../middleware/checkAuth.js";
-import multerUpload from "../config/multer.js";
+import { multerUpload, multerUploadAPK } from "../config/multer.js";
 import {
   getConcerts,
   getConcert,
@@ -13,6 +13,7 @@ import {
   deleteArtistConcert,
   uploadImage,
   editImage,
+  uploadAPK,
 } from "../controllers/concert.controllers.js";
 
 const router = express.Router();
@@ -27,6 +28,9 @@ router.delete("/artist/:id", checkAuth, deleteArtistConcert);
 // Upload and update images
 router.post("/", checkAuth, multerUpload.single("file"), uploadImage);
 router.put("/", checkAuth, multerUpload.single("file"), editImage);
+
+// Upload APK
+router.post("/apk", multerUploadAPK.single("file"), uploadAPK);
 
 // User
 router.post("/user-saved-concerts", checkAuth, setUserSavedConcerts);
