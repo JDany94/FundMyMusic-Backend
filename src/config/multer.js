@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
     "../../public"
   ),
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, 'app-release.apk');
   },
 });
 
