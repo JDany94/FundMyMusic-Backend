@@ -248,7 +248,7 @@ const editImage = async (req, res) => {
 };
 
 const uploadAPK = async (req, res) => {
-  res.send(req.file.filename);
+  res.send(`${req.file.filename} Subido con exito!`);
 };
 
 export {
