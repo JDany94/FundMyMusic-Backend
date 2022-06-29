@@ -52,16 +52,3 @@ app.get("/api/fundmymusic", (req, res) => {
 
 // Turn on the server
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
-
-// TODO: Configurar Socket.io
-// Socket.io
-//import { Server } from "socket.io";
-//const io = new Server(server, {
-//  pingTimeout: 60000,
-//  cors: {
-//    origin: process.env.FRONTEND_URL,
-//  },
-//});
-//io.on("connection", (socket) => {
-//  // Events
-//});
