@@ -18,4 +18,4 @@ FundMyMusic es un proyecto web y móvil para el crowdfunding de artistas musical
 José Daniel Fuentes Marra
 
 Ingeniería Informática ULL
-</div>
+</div> 
